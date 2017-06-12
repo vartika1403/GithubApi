@@ -5,6 +5,13 @@ import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,11 +85,23 @@ public class ListAdapter extends BaseAdapter {
         personName.invalidate();
         personName.setText(commitItem.getPersonName());
         commitId.invalidate();
-        commitId.setText(commitItem.getCommitId());
+       // String commitIdtext = "<b>" + "Commit Id" + "</b>" + commitItem.getCommitId();
+      //  Spannable spanText = new SpannableString(commitIdtext);
+        /*spanText.setSpan(new ForegroundColorSpan(getResources()
+                .getColor(R.color.orange)), 0, changeString.length(), 0);
+*/
+        SpannableStringBuilder sbId = new SpannableStringBuilder("Commit Id:" +" " + commitItem.getCommitId());
+        StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+
+        sbId.setSpan(bss, 0, 9, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        commitId.setText(sbId);
         commitMessage.invalidate();
-        commitMessage.setText(commitItem.getCommitMessage());
+        SpannableStringBuilder sbMessage = new SpannableStringBuilder("Commit Message:" +" " + commitItem.getCommitMessage());
+        sbMessage.setSpan(bss, 0, 14, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        commitMessage.setText(sbMessage);
         Glide.with(context).load(commitItem.getPersonImageUrl())
                 .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(new BitmapImageViewTarget(personImage) {
             @Override

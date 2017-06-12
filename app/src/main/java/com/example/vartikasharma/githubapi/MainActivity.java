@@ -3,7 +3,9 @@ package com.example.vartikasharma.githubapi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.commit_list)
     ListView commitList;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             JSONArray jsonArray = new JSONArray(myResponse);
+                            progressBar.setVisibility(View.INVISIBLE);
                             Log.i(LOG_TAG, "jsonArray, " + jsonArray);
                             for (int i = 0 ; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);

@@ -51,25 +51,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         fetchDataFromUrl();
 
         commitList.setTextFilterEnabled(true);
-        handleIntent(getIntent());
     }
 
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-
-            showResults(query);
-        }
-    }
-
-    private void showResults(String query) {
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-     super.onNewIntent(intent);
-
-    }
     private void fetchDataFromUrl() {
         OkHttpClient client = new OkHttpClient();
 
@@ -125,12 +108,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         if (searchView != null) {
-            searchView.setOnQueryTextListener((SearchView.OnQueryTextListener) this);
+            searchView.setOnQueryTextListener(this);
         }
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
-       // searchView.setOnQueryTextListener(this);
+
         return true;
     }
 

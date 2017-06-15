@@ -132,21 +132,21 @@ public class ListAdapter extends BaseAdapter implements Filterable {
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                final FilterResults oReturn = new FilterResults();
+                final FilterResults filterResults = new FilterResults();
                 final ArrayList<CommitItem> results = new ArrayList<CommitItem>();
                 if (orig == null)
                     orig = commitItemList;
                 if (constraint != null) {
                     if (orig != null && orig.size() > 0) {
-                        for (final CommitItem g : orig) {
-                            if (g.getCommitId().toLowerCase()
+                        for (final CommitItem commitItem : orig) {
+                            if (commitItem.getCommitId().toLowerCase()
                                     .contains(constraint.toString()))
-                                results.add(g);
+                                results.add(commitItem);
                         }
                     }
-                    oReturn.values = results;
+                    filterResults.values = results;
                 }
-                return oReturn;
+                return filterResults;
             }
 
             @SuppressWarnings("unchecked")

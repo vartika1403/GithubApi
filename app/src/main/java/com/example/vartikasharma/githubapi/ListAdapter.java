@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,12 +22,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ListAdapter extends BaseAdapter {
+public class ListAdapter extends BaseAdapter implements Filterable {
     private Context context;
     private LayoutInflater inflater;
     private List<CommitItem> commitItemList;
+    private List<CommitItem> orig;
 
     public ListAdapter(Context context, List<CommitItem> commitItemList) {
         this.context = context;
@@ -120,5 +124,38 @@ public class ListAdapter extends BaseAdapter {
     @Override
     public boolean isEmpty() {
         return false;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final ArrayList<CommitItem> results = new ArrayList<CommitItem>();
+                if (orig == null)
+                    orig = commitItemList;
+                if (constraint != null) {
+                    if (orig != null && orig.size() > 0) {
+                        for (final CommitItem g : orig) {
+                            if (g.getCommitId().toLowerCase()
+                                    .contains(constraint.toString()))
+                                results.add(g);
+                        }
+                    }
+                    oReturn.values = results;
+                }
+                return oReturn;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint,
+                                          FilterResults results) {
+                commitItemList = (ArrayList<CommitItem>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

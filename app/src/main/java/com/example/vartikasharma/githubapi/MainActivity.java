@@ -2,10 +2,12 @@ package com.example.vartikasharma.githubapi;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     public String URL = "https://api.github.com/repos/rails/rails/commits";
     @BindView(R.id.commit_list)
@@ -47,8 +49,27 @@ public class MainActivity extends AppCompatActivity {
 
         commitItemList = new ArrayList<>();
         fetchDataFromUrl();
+
+        commitList.setTextFilterEnabled(true);
+        handleIntent(getIntent());
     }
 
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+
+            showResults(query);
+        }
+    }
+
+    private void showResults(String query) {
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+     super.onNewIntent(intent);
+
+    }
     private void fetchDataFromUrl() {
         OkHttpClient client = new OkHttpClient();
 
@@ -110,6 +131,21 @@ public class MainActivity extends AppCompatActivity {
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(true);
        // searchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText.toString())) {
+            commitList.clearTextFilter();
+        } else {
+            commitList.setFilterText(newText.toString());
+        }
         return true;
     }
 }
